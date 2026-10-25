@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# MATLAB autosave / editor files
+*.asv
+*.m~
+
+# Results and data (keep them out of the repository)
+*.mat
+*.csv
+*.png
+*.edf
+1_Rereferenced/
+2_SlowOscillations/
+3_Spindles/
+4_Bursts/
