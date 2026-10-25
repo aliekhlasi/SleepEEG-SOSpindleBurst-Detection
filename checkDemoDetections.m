@@ -17,6 +17,10 @@ function DemoCheck = checkDemoDetections(recording, Truth, selectedFolder)
     %   Theta/alpha burst - detected burst (Included = 1) overlaps the injected burst
     %
     % Output: DemoCheck table, also saved as <recording>_DemoCheck.csv in the results folder.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     SO = readtable(fullfile(selectedFolder, '2_SlowOscillations', [recording '_SO_events.csv']), 'TextType', 'string');
     SP = readtable(fullfile(selectedFolder, '3_Spindles', [recording '_Spindle_events.csv']), 'TextType', 'string');

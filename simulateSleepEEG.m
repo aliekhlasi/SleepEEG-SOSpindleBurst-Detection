@@ -22,6 +22,10 @@ function [My_EEG, Scoring, Truth] = simulateSleepEEG(My_Channel, SamplingRate, W
     %   Scoring - Stage code of each epoch (the hypnogram).
     %   Truth   - Table with one row per injected event (the "ground truth"
     %             that checkDemoDetections compares the results with).
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     fs = SamplingRate;
     epochLen = Windows_size_scoring * fs;

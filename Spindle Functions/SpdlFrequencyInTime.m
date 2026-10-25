@@ -1,5 +1,11 @@
 function [IPIs, SPon, SPoff, keepIT] = SpdlFrequencyInTime(tx_sp, ch_sp, SPstart, SPend, SPf, opt)
-    % SPDLFREQUENCYINTIME - Analyze spindle events in time series data.
+    % SPDLFREQUENCYINTIME - Spindle step 3: waveform check and onset/offset refinement.
+    %
+    % Within the spindle window, oscillation peaks are found on the z-scored
+    % EEG (minimum prominence 0.3). The spindle is rejected if no peaks are
+    % found or if the EEG exceeds 200 uV (artifact). Otherwise onset/offset
+    % are moved to 0.09 s before the first / after the last peak when the
+    % window has more than 0.1 s of extra signal at either end.
     %
     % Inputs:
     %   tx_sp     - Time vector associated with the spindle event [seconds].
@@ -14,6 +20,10 @@ function [IPIs, SPon, SPoff, keepIT] = SpdlFrequencyInTime(tx_sp, ch_sp, SPstart
     %   SPon      - Adjusted onset time of the spindle event [seconds].
     %   SPoff     - Adjusted offset time of the spindle event [seconds].
     %   keepIT    - Flag indicating whether the spindle is valid (1) or not (0).
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     % Extract time and channel data within the spindle event window
     tx = tx_sp(and(tx_sp >= SPstart, tx_sp <= SPend));  % Time vector within the spindle window

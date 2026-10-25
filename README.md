@@ -1,10 +1,21 @@
 # SleepEEG-SOSpindleBurst-Detection
 
-A MATLAB toolbox that detects three kinds of sleep EEG events:
+A MATLAB toolbox that detects three kinds of sleep EEG events: slow oscillations, sleep spindles, and theta/alpha bursts.
 
-- **Slow oscillations (SO)**: 0.1–4 Hz waves, reported for N2, N3 and N2+N3
-- **Sleep spindles**: 9–16 Hz bursts, reported for N2, N3 and N2+N3
-- **Theta (4–8 Hz) and alpha (8–13 Hz) bursts**: reported for REM sleep, per quarter and half of the night
+**Maintainer:** Ali Ekhlasi, Sleep and Cognition (SaC) Lab  
+**Repository:** https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+
+## What the toolbox detects
+
+| Event | Frequency range | Other criteria | Searched in | Summarized for |
+|---|---|---|---|---|
+| **Slow oscillation (SO)** | Band-pass 0.1–4 Hz. Negative half-wave 0.3–1 s, i.e. waves of about 0.5–1.7 Hz | Negative peak < −80 µV, peak-to-peak > 80 µV | Whole recording | **N2, N3, N2+N3** |
+| **Sleep spindle** | Sigma band **9–16 Hz** | RMS peak z > 3.5, a wavelet power island centered at 9–16 Hz, clear oscillation peaks, < 200 µV | Whole recording | **N2, N3, N2+N3** |
+| **Theta burst** | **4–8 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–3 s | Whole recording | **REM** (night quarters, halves, whole night) |
+| **Alpha burst** | **8–13 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–2 s | Whole recording | **REM** (night quarters, halves, whole night) |
+
+- **Searched in:** every event is detected in the whole recording, and the event tables list all of them with the sleep stage at which each occurred. You can therefore also look at, for example, spindles in N1, or bursts in Wake.
+- **Summarized for:** the summary tables (counts, densities per minute, averages) only use these stages.
 
 The EEG is first re-referenced to the mastoids. Every detected event is saved in a table (CSV and `.mat`) with its channel, sleep stage, timing and amplitude. A summary table gives counts and densities per channel.
 
@@ -279,6 +290,7 @@ A period with no REM (for example `Q1` early in the night) has `REM_min = 0`, so
 ## Credits
 
 Developed at the Sleep and Cognition (SaC) Lab.
+Maintainer: Ali Ekhlasi. Questions and bug reports: please open an issue at https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection/issues
 
 ## License
 

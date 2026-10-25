@@ -1,3 +1,14 @@
+% MAIN_TOOLBOX - Run the full SleepEEG-SOSpindleBurst-Detection pipeline.
+%
+% Steps: re-referencing -> slow oscillations (0.1-4 Hz; N2, N3) ->
+% spindles (9-16 Hz; N2, N3) -> theta (4-8 Hz) and alpha (8-13 Hz)
+% bursts (REM). Runs a demo with simulated data; see README.md for
+% how to use your own recording and for every output file.
+%
+% Part of SleepEEG-SOSpindleBurst-Detection
+% Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+% https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+
 clc;  % Clear the command window
 clear;  % Clear all variables from the workspace
 close all;  % Close all figure windows

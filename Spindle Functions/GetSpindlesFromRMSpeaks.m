@@ -1,16 +1,33 @@
 function Spdl = GetSpindlesFromRMSpeaks(FoundPeaks, channel, tx, freq, Hypno, opt)
-    % GETSPINDLESFROMRMSPEAKS_V2 - Analyze spindle events based on detected peaks.
+    % GETSPINDLESFROMRMSPEAKS - Spindle step 2: wavelet check of each candidate.
+    %
+    % For every candidate from DetectRMSpeaks, a Morlet wavelet transform is
+    % computed over +/- 1 s (after a 3 Hz high-pass). Contour lines of equal
+    % wavelet power are traced. A candidate is a spindle when there is a
+    % closed power "island" (contour loop) that is
+    %   - centered between 9 and 16 Hz (sigma band),
+    %   - centered within 0.5 s of the candidate time,
+    %   - at least 4 of the 20 power levels high.
+    % Onset/offset are taken from the loop at half that height.
+    % Spindles less than 0.1 s apart are counted once.
     %
     % Inputs:
-    %   FoundPeaks - Structure containing detected peaks with time information.
-    %   channel    - EEG signal corresponding to the detected peaks [uV].
-    %   tx         - Time vector associated with the EEG signal [seconds].
-    %   freq       - Sampling frequency of the EEG signal [Hz].
-    %   Hypno      - Structure containing sleep stage information.
-    %   opt        - Options structure containing plotting preferences.
+    %   FoundPeaks - Candidates from DetectRMSpeaks (fields Time, tID).
+    %   channel    - EEG signal of the channel (0.3-35 Hz filtered) [uV].
+    %   tx         - Time vector of the signal [s].
+    %   freq       - Sampling rate [Hz].
+    %   Hypno      - Hypnogram: Hypno.t (epoch end times [s]), Hypno.stg (stage codes).
+    %   opt        - Options: showplots (0/1); figDir and figPrefix to save the
+    %                wavelet map of every candidate as a PNG (no pop-ups).
     %
-    % Outputs:
-    %   Spdl       - Structure containing details of detected spindles.
+    % Output:
+    %   Spdl - Struct with one entry per spindle in each field:
+    %          RMStime (candidate time), tx/trace (2-s EEG window), on/off [s],
+    %          freq [Hz], pktime (time of max power) [s], pwLevel (0-1), n (count).
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     %% Initialize Parameters
     Trange = [-1, 1];  % Time range around each detected peak (in seconds)

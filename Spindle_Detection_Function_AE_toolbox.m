@@ -1,6 +1,14 @@
 function Spindle_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, Scoring, SamplingRate, Windows_size_scoring, StageCodes, dirPaths)
     % SPINDLE_DETECTION_FUNCTION_AE_TOOLBOX - Detect sleep spindles in EEG data.
     %
+    % What:   Sleep spindles: waxing-waning oscillations in the sigma band,
+    %         9-16 Hz, found in three steps:
+    %           1. DetectRMSpeaks          - candidates from peaks of the sigma RMS
+    %           2. GetSpindlesFromRMSpeaks - wavelet power island at 9-16 Hz
+    %           3. SpdlFrequencyInTime     - clear oscillation peaks, < 200 uV
+    % Where:  Detected in the whole recording; every spindle gets the sleep
+    %         stage at its power peak. The summary reports N2, N3 and N2+N3.
+    %
     % Inputs:
     %   recording            - Name of the current recording (string).
     %   EEG_reref            - Structure containing re-referenced EEG data.
@@ -16,6 +24,10 @@ function Spindle_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, S
     %   <recording>_Spindle_summary.csv - Count and density per channel for N2, N3 and N2+N3.
     %   <recording>_Spindles.mat        - Both tables, spindle waveforms and parameters.
     %   Figures/<channel>/*.png         - Wavelet map of every candidate spindle.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     fs = SamplingRate;
     epochMin = Windows_size_scoring / 60;  % Epoch length in minutes

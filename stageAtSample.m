@@ -12,6 +12,10 @@ function [stageCode, stageName] = stageAtSample(samples, Scoring, SamplingRate, 
     % Outputs:
     %   stageCode - Stage code at each sample (NaN outside the scored part).
     %   stageName - Stage name at each sample (string, "Unscored" if unknown).
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     samples = samples(:);
     epochLen = SamplingRate * Windows_size_scoring;

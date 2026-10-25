@@ -11,6 +11,10 @@ function Detected = A_burst_detector_wrapper(EEG_Burst, freq_band)
     %       nb_starts, nb_ends - Start/end sample indices of the non-burst
     %                           periods between bursts.
     %       filtered          - Band-pass filtered signal of the channel.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     % Band-pass filter all channels (EEGLAB)
     EEG = pop_eegfiltnew(EEG_Burst, 'locutoff', freq_band(1), 'hicutoff', freq_band(2), 'plotfreqz', 0);

@@ -8,6 +8,10 @@ function [leftChannels, rightChannels, midlineChannels] = assignChannels(My_Chan
     %   leftChannels    - Selected left channels (referenced to M2).
     %   rightChannels   - Selected right channels (referenced to M1).
     %   midlineChannels - Selected midline channels (referenced to (M1+M2)/2).
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     allChannels = cellstr(My_Channel);
     scalp = allChannels(~(strcmpi(allChannels, 'M1') | strcmpi(allChannels, 'M2')));

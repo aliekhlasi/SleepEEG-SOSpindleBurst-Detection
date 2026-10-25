@@ -2,6 +2,14 @@ function Burst_Detection_Theta_Alpha_toolbox(recording, EEG_reref, Channels, Sco
     % BURST_DETECTION_THETA_ALPHA_TOOLBOX - Detect theta and alpha bursts and
     % summarize the bursts that occur during REM sleep.
     %
+    % What:   Bursts of oscillation where the amplitude envelope rises above
+    %         mean + 2 SD (30-s moving window), see burst_detector2.m:
+    %           theta bursts: 4-8 Hz,  0.5-3 s long
+    %           alpha bursts: 8-13 Hz, 0.5-2 s long
+    % Where:  Detected in the whole recording (all listed in Burst_events with
+    %         their stage). The summary counts only bursts that start in REM
+    %         and have a valid duration, per night quarter, half and whole night.
+    %
     % Inputs:
     %   recording            - Name of the current recording (string).
     %   EEG_reref            - Structure containing re-referenced EEG data.
@@ -17,6 +25,10 @@ function Burst_Detection_Theta_Alpha_toolbox(recording, EEG_reref, Channels, Sco
     %                                   showing which ones are counted in the summary.
     %   <recording>_Burst_summary.csv - REM bursts per band, channel and part of the night.
     %   <recording>_Bursts.mat        - Both tables, the non-burst periods and parameters.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     fs = SamplingRate;
     epochLen = Windows_size_scoring * fs;      % Epoch length [samples]

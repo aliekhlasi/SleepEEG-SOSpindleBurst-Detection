@@ -1,8 +1,14 @@
 function [FoundPeaks] = DetectRMSpeaks(filtchannel, tx, freq, opt)
-    % DETECRMSPEAKS - Detect peaks in the Root Mean Square (RMS) of the filtered EEG signal.
+    % DETECTRMSPEAKS - Spindle step 1: find spindle candidates.
+    %
+    % The moving RMS (0.1-s window) of the sigma-band (9-16 Hz) signal is
+    % z-scored in overlapping 30-s chunks (1-s overlap). Peaks of the z-scored
+    % RMS above 3.5 (prominence >= 0.5) are candidates. Peaks that are not
+    % separated by a dip below z = 0 belong to the same event, and only the
+    % highest one is kept. Candidates are searched in all sleep stages.
     %
     % Inputs:
-    %   filtchannel - Filtered EEG signal [uV].
+    %   filtchannel - Sigma-band (9-16 Hz) filtered EEG signal [uV].
     %   tx          - Time vector associated with the filtered signal [seconds].
     %   freq        - Sampling frequency of the EEG signal [Hz].
     %   opt         - Options structure containing plotting preferences.
@@ -12,6 +18,10 @@ function [FoundPeaks] = DetectRMSpeaks(filtchannel, tx, freq, opt)
     %                 - Zscore: z-scores of detected peaks.
     %                 - Time: time points of detected peaks.
     %                 - tID: indices of detected peaks.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     %% Initialize Parameters
     PkThreshold = 3.5;  % Minimum z-score height for peaks of RMS

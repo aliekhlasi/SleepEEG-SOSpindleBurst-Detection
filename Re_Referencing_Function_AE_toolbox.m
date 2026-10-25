@@ -23,6 +23,10 @@ function [EEG_reref, Channels] = Re_Referencing_Function_AE_toolbox(recording, M
     %   EEG_reref - EEGLAB-style structure with the re-referenced data
     %               (one row per selected scalp channel, in recording order).
     %   Channels  - Names of the channels in EEG_reref.data, same order.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     My_Channel = cellstr(My_Channel);
 

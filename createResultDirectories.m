@@ -9,6 +9,10 @@ function [selectedFolder, dirPaths] = createResultDirectories()
     %                    {2} 2_SlowOscillations
     %                    {3} 3_Spindles
     %                    {4} 4_Bursts
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     % Prompt the user to select a folder for saving results
     selectedFolder = uigetdir('', 'Select a folder to save the results');

@@ -1,16 +1,25 @@
 % %----------------------------------------------------------------------%
-% function: DetectSO_Filter_AE
+% function: DetectSO_Filter_AE_toolbox
 %
-%           This function detects slow oscillations (SO) in EEG signals.
-%           The raw signal is first filtered between 0.1 Hz and 4 Hz 
-%           using Butterworth filters. Zero crossings are then identified 
-%           to segment the data into candidate events. Events are screened 
-%           based on criteria such as depth, duration, and peak-to-peak 
-%           voltage to identify valid slow oscillations.
+%           Detects slow oscillations (SO) in one EEG channel.
+%           1. The signal is band-passed between 0.1 and 4 Hz
+%              (4th-order Butterworth high-pass and low-pass, zero-phase).
+%           2. Zero crossings split it into candidate waves:
+%              downward crossing -> upward crossing -> next downward crossing
+%              (negative half-wave followed by positive half-wave).
+%              The first and last 2 s of the signal are skipped.
+%           3. A candidate is kept when its negative half-wave lasts
+%              duration_min-duration_max s, its positive half-wave is shorter
+%              than duration_whole s, its negative peak is deeper than
+%              threshold_neg uV and its peak-to-peak amplitude exceeds
+%              peak_to_peak uV.
+%           With the toolbox defaults (0.3-1 s negative half-wave) this
+%           selects waves of roughly 0.5-1.7 Hz. The sleep stage of each SO
+%           is assigned afterwards by SO_Detection_Function_AE_toolbox.
 %
 %           Example usage:
 %           [can_events, events_minima, EEG_Filtered_Signal] = ...
-%           DetectSO_Filter_AE(signal_raw, freq, threshold_neg, peak_to_peak, duration_min, duration_max, duration_whole)
+%           DetectSO_Filter_AE_toolbox(signal_raw, freq, threshold_neg, peak_to_peak, duration_min, duration_max, duration_whole)
 %
 % input:   - signal_raw          : Raw EEG signal [uV].
 %          - freq                : Frequency of EEG acquisition [Hz].
@@ -18,7 +27,7 @@
 %          - peak_to_peak        : Minimum allowable peak-to-peak distance of the SO [uV].
 %          - duration_min        : Minimum allowable width of the negative half of the SO [sec].
 %          - duration_max        : Maximum allowable width of the negative half of the SO [sec].
-%          - duration_whole      : Maximum allowable duration of the entire wave [sec].
+%          - duration_whole      : Maximum allowable width of the positive half of the SO [sec].
 %
 % output:   - can_events         : Matrix of detected events with start, middle, and end timepoints [samples].
 %           - events_minima      : Array of timepoints for the minima of each detected slow oscillation [samples].
@@ -28,6 +37,10 @@
 %          zero crossings may not correspond exactly to the raw signal.
 %
 %           written by Mohsen, modified by Daga, Dec 2016
+%
+%           Part of SleepEEG-SOSpindleBurst-Detection
+%           Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+%           https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 % %----------------------------------------------------------------------%
 
 function [can_events, events_minima, EEG_Filtered_Signal] = DetectSO_Filter_AE_toolbox(signal_raw, freq, threshold_neg, peak_to_peak, duration_min, duration_max, duration_whole)

@@ -1,6 +1,13 @@
 function SO_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, Scoring, SamplingRate, Windows_size_scoring, StageCodes, dirPaths)
     % SO_DETECTION_FUNCTION_AE_TOOLBOX - Detect slow oscillations (SO) in EEG data.
     %
+    % What:   Slow oscillations: large negative-then-positive waves.
+    %         Signal band-passed at 0.1-4 Hz; negative half-wave 0.3-1 s long
+    %         (about 0.5-1.7 Hz), negative peak deeper than -80 uV and
+    %         peak-to-peak amplitude above 80 uV.
+    % Where:  Detected in the whole recording; every SO gets the sleep stage
+    %         at its negative peak. The summary reports N2, N3 and N2+N3.
+    %
     % Inputs:
     %   recording            - Name of the current recording (string).
     %   EEG_reref            - Structure containing re-referenced EEG data.
@@ -15,6 +22,10 @@ function SO_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, Scorin
     %   <recording>_SO_events.csv  - One row per detected slow oscillation.
     %   <recording>_SO_summary.csv - Count and density per channel for N2, N3 and N2+N3.
     %   <recording>_SO.mat         - Both tables plus the detection parameters.
+    %
+    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
     fs = SamplingRate;
     epochMin = Windows_size_scoring / 60;  % Epoch length in minutes
