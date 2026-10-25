@@ -91,7 +91,7 @@ for k = find(isREM)
 end
 set(ax, 'YTick', 1:5, 'YTickLabel', names, 'XTickLabel', [], 'YLim', [0.5 5.5], 'XLim', [0 nightMin]);
 ax.YGrid = 'on';
-title(ax, 'Hypnogram and detected events (channel Fz, demo data)', 'FontWeight', 'normal', 'FontSize', 12);
+title(ax, 'Hypnogram and detected events (channel Fz, simulated demo data)', 'FontWeight', 'normal', 'FontSize', 12);
 
 rows = {
     'Slow oscillations', SO.SO_events.NegPeak_s(SO.SO_events.Channel == ch), C.blue;
@@ -144,7 +144,7 @@ env = abs(hilbert(xTH));
 w = t >= e.Start_s - 3 & t <= e.End_s + 3;
 plot(ax, t(w), env(w), 'Color', C.text2, 'LineWidth', 1);
 text(ax, e.End_s + 0.15, max(env(w)) * 0.95, 'envelope', 'Color', C.text2, 'FontSize', 9);
-title(tl, 'Example detections (channel Fz, demo data)', 'FontSize', 12);
+title(tl, 'Example detections (channel Fz, simulated demo data)', 'FontSize', 12);
 exportgraphics(f, fullfile(imgDir, '2_example_events.png'), 'Resolution', 150, 'BackgroundColor', 'white');
 
 %% Figure 3: wavelet map of the example spindle (saved by the toolbox)
@@ -177,7 +177,7 @@ ylabel(ax, 'Bursts per min of REM');
 title(ax, 'REM bursts by night quarter', 'FontWeight', 'normal');
 text(ax, 1, 0.4, {'no REM', 'in Q1'}, 'HorizontalAlignment', 'center', 'Color', C.text2, 'FontSize', 9);
 legend(ax, {'Theta (4–8 Hz)', 'Alpha (8–13 Hz)'}, 'Location', 'northoutside', 'Orientation', 'horizontal', 'Box', 'off');
-title(tl, 'Densities from the summary tables (demo data)', 'FontSize', 12);
+title(tl, 'Densities from the summary tables (simulated demo data)', 'FontSize', 12);
 exportgraphics(f, fullfile(imgDir, '4_summary_density.png'), 'Resolution', 150, 'BackgroundColor', 'white');
 
 %% Figure 5: detected vs. injected events (demo check)
@@ -197,7 +197,7 @@ end
 set(ax, 'XTick', 1:4, 'XTickLabel', labels, 'YLim', [0 110], 'YTick', 0:20:100);
 ax.YGrid = 'on';
 ylabel(ax, 'Injected events found (%)');
-title(ax, {'Demo check: how many injected events were detected', ...
+title(ax, {'Demo check (simulated data): how many injected events were detected', ...
     '\fontsize{9}\color[rgb]{0.32,0.32,0.31}bar = mean of 4 channels, circles = each channel'}, 'FontWeight', 'normal');
 exportgraphics(f, fullfile(imgDir, '5_demo_check.png'), 'Resolution', 150, 'BackgroundColor', 'white');
 
