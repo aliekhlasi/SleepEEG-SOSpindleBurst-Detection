@@ -6,6 +6,20 @@
 **Maintainer:** Ali Ekhlasi  
 **Repository:** https://github.com/aliekhlasi/SleepRhythms
 
+![Hypnogram and detected events across the demo night](docs/images/1_hypnogram_events.png)
+*Demo night, channel Fz: the hypnogram (top; REM shaded) and every event SleepRhythms detected. Slow oscillations and spindles appear in NREM sleep; theta and alpha bursts are counted in REM.*
+
+```mermaid
+flowchart LR
+    A["EEG + hypnogram"] --> B["Re-reference<br/>to mastoids"]
+    B --> C["Slow oscillations<br/>0.1–4 Hz"]
+    B --> D["Spindles<br/>9–16 Hz"]
+    B --> E["Theta & alpha bursts<br/>4–8 / 8–13 Hz"]
+    C --> F["Event tables<br/>+ summary tables"]
+    D --> F
+    E --> F
+```
+
 ## What the toolbox detects
 
 | Event | Frequency range | Other criteria | Detected in | Counted in the summary table for |
@@ -14,6 +28,9 @@
 | **Sleep spindle** | Sigma band **9–16 Hz** | RMS peak z > 3.5, a wavelet power island centered at 9–16 Hz, clear oscillation peaks, < 200 µV | Whole recording | **N2, N3, N2+N3** |
 | **Theta burst** | **4–8 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–3 s | Whole recording | **REM** (night quarters, halves, whole night) |
 | **Alpha burst** | **8–13 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–2 s | Whole recording | **REM** (night quarters, halves, whole night) |
+
+![One example of each detected event](docs/images/2_example_events.png)
+*One detection of each kind from the demo (channel Fz). Top: raw EEG. Bottom: the band each detector works on. Shading: the detected event. For the theta burst, the gray line is the amplitude envelope that is compared with the threshold.*
 
 ### Detected in vs. counted in the summary table
 
@@ -53,6 +70,9 @@ Density_per_min = number of events in that stage ÷ minutes scored as that stage
 | Theta bursts, `WholeNight` | all REM theta bursts | all minutes of REM | 62 ÷ 8 min of REM = **7.75 per min of REM** |
 
 The `N2+N3` density is **not** the average of the N2 and N3 densities: it's the combined count divided by the combined time. The minutes used are listed next to every density, in `StageDuration_min` (slow oscillations, spindles) or `REM_min` (bursts). If a stage doesn't occur in that period, its minutes are 0 and the density is `NaN`.
+
+![Densities from the summary tables](docs/images/4_summary_density.png)
+*Densities from the demo's summary tables: slow oscillations and spindles per minute of N2 and N3 for each channel, and REM bursts per minute of REM in each night quarter (mean of the 4 channels). Q1 has no REM, so its density is `NaN`.*
 
 The EEG is first re-referenced to the mastoids. Every detected event is saved in a table (CSV and `.mat`) with its channel, sleep stage, timing and amplitude. A summary table gives counts and densities per channel.
 
@@ -133,6 +153,8 @@ A typical demo run finds about 80–90% of the injected slow oscillations, spind
 - Some injected slow oscillations are deliberately close to the 80 µV threshold.
 - The burst detector's threshold adapts to the background.
 - The "extra" detections come from the random background, which by chance sometimes looks like an event.
+
+![Demo check](docs/images/5_demo_check.png)
 
 The results differ slightly from run to run because the data are random. Use `rng(1)` before `Main_Toolbox` for identical runs.
 
@@ -303,6 +325,7 @@ A period with no REM (for example `Q1` early in the night) has `REM_min = 0`, so
 | `Spindle_Detection_Function_AE_toolbox.m`, `Spindle Functions/` | Step 3: spindles |
 | `Burst_Detection_Theta_Alpha_toolbox.m`, `Burst Detection Functions/` | Step 4: theta and alpha bursts |
 | `stageAtSample.m` | Helper: finds the sleep stage at a given time |
+| `docs/make_readme_figures.m` | Recreates the figures in this README from the demo (`run('docs/make_readme_figures.m')`) |
 
 ---
 
@@ -351,6 +374,9 @@ re-referenced EEG ─────┼─ 0.3–35 Hz (EEGLAB FIR) ─┬─ 9–1
 1. *Candidates*: the RMS of the 9–16 Hz signal (0.1-s window) is z-scored. Peaks above z = 3.5 become candidates (`DetectRMSpeaks.m`).
 2. *Wavelet check*: a Morlet wavelet transform of ±1 s around each candidate must contain a closed power "island" centered within 9–16 Hz and within 0.5 s of the candidate (`GetSpindlesFromRMSpeaks.m`).
 3. *Waveform check*: the spindle must show clear oscillation peaks and stay below 200 µV. Onset and offset are refined to the first and last peak (`SpdlFrequencyInTime.m`).
+
+![Wavelet map of a detected spindle](docs/images/3_spindle_wavelet.png)
+*Step 2 for one spindle (saved automatically in `3_Spindles/Figures/`): contour lines of wavelet power around the candidate (dotted line). The closed power island between the red 9 and 16 Hz lines makes it a spindle.*
 
 **Bursts** (`Burst_Detection_Theta_Alpha_toolbox.m` and `Burst Detection Functions/`), following Shuster et al. (2024): the signal is band-passed (EEGLAB) and its Hilbert amplitude envelope is computed. A burst is a period where the envelope exceeds mean + 2 SD of a 30-s moving window. The burst edges are extended while the amplitude stays above half the threshold, and a minimum number of cycles is required (`burst_detector2.m`).
 

@@ -52,7 +52,8 @@ function Spdl = GetSpindlesFromRMSpeaks(FoundPeaks, channel, tx, freq, Hypno, op
     saveFigs = isfield(opt, 'figDir') && ~isempty(opt.figDir);
     if saveFigs && ~exist(opt.figDir, 'dir'), mkdir(opt.figDir); end
     if ~isfield(opt, 'figPrefix'), opt.figPrefix = 'spindle'; end
-    figH = figure('Visible', 'off');
+    figH = figure('Visible', 'off', 'Color', 'w');
+    try, theme(figH, 'light'); catch, end   % readable PNGs also when MATLAB uses dark mode
     axH = axes(figH);
 
     % Loop through each detected peak

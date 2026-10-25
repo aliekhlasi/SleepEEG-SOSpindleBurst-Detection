@@ -14,3 +14,7 @@
 2_SlowOscillations/
 3_Spindles/
 4_Bursts/
+
+# Keep the README figures
+!docs/images/
+!docs/images/*.png
