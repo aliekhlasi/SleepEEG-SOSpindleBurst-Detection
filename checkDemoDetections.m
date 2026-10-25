@@ -19,7 +19,7 @@ function DemoCheck = checkDemoDetections(recording, Truth, selectedFolder)
     % Output: DemoCheck table, also saved as <recording>_DemoCheck.csv in the results folder.
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     SO = readtable(fullfile(selectedFolder, '2_SlowOscillations', [recording '_SO_events.csv']), 'TextType', 'string');

@@ -24,7 +24,7 @@ function [My_EEG, Scoring, Truth] = simulateSleepEEG(My_Channel, SamplingRate, W
     %             that checkDemoDetections compares the results with).
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     fs = SamplingRate;

@@ -25,7 +25,7 @@ function [EEG_reref, Channels] = Re_Referencing_Function_AE_toolbox(recording, M
     %   Channels  - Names of the channels in EEG_reref.data, same order.
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     My_Channel = cellstr(My_Channel);

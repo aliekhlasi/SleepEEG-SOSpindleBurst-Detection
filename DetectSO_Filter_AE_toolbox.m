@@ -42,7 +42,7 @@
 %                      doi:10.1093/sleep/zsy197 (same criteria in Malerba et al. 2022, Sleep 45(8):zsac132)
 %
 %           Part of SleepRhythms
-%           Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+%           Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
 %           https://github.com/aliekhlasi/SleepRhythms
 % %----------------------------------------------------------------------%
 

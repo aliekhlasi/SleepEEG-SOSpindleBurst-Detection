@@ -5,7 +5,7 @@ function setupToolbox()
     % 'Burst Detection Functions' subfolders to the path.
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     % Prompt user to select the toolbox directory

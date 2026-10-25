@@ -17,7 +17,7 @@ function [rms_signal] = ComputeRootMeanSq(signal, wdwT, sampling_freq, smoothing
     %   rms_signal.smooth - Gaussian-smoothed RMS (empty if smoothingWdw = 0).
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     %% Moving RMS over a centered window

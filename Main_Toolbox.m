@@ -6,7 +6,7 @@
 % how to use your own recording and for every output file.
 %
 % Part of SleepRhythms
-% Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+% Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
 % https://github.com/aliekhlasi/SleepRhythms
 
 clc;  % Clear the command window

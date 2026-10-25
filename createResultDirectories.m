@@ -11,7 +11,7 @@ function [selectedFolder, dirPaths] = createResultDirectories()
     %                    {4} 4_Bursts
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     % Prompt the user to select a folder for saving results

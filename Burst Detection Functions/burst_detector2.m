@@ -39,7 +39,7 @@ function [starts, ends, nb_starts, nb_ends] = burst_detector2(filtered_Signal, F
     %              J Neurosci 44(24). doi:10.1523/JNEUROSCI.1517-23.2024
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     nb_starts = [];

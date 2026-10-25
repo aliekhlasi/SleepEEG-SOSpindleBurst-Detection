@@ -25,7 +25,7 @@ function [IPIs, SPon, SPoff, keepIT] = SpdlFrequencyInTime(tx_sp, ch_sp, SPstart
     %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     % Extract time and channel data within the spindle event window

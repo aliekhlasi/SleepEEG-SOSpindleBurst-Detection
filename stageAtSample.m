@@ -14,7 +14,7 @@ function [stageCode, stageName] = stageAtSample(samples, Scoring, SamplingRate, 
     %   stageName - Stage name at each sample (string, "Unscored" if unknown).
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     samples = samples(:);

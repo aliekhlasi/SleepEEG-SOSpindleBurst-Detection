@@ -10,7 +10,7 @@ function [leftChannels, rightChannels, midlineChannels] = assignChannels(My_Chan
     %   midlineChannels - Selected midline channels (referenced to (M1+M2)/2).
     %
     %   Part of SleepRhythms
-    %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
+    %   Developed at the Sleep and Cognition (SaC) Lab, UC Irvine. Maintainer: Ali Ekhlasi
     %   https://github.com/aliekhlasi/SleepRhythms
 
     allChannels = cellstr(My_Channel);

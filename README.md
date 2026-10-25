@@ -2,7 +2,8 @@
 
 **SleepRhythms** is a MATLAB toolbox that detects three kinds of sleep EEG rhythms: slow oscillations, sleep spindles, and theta/alpha bursts in REM sleep.
 
-**Maintainer:** Ali Ekhlasi, Sleep and Cognition (SaC) Lab  
+**Developed at:** Sleep and Cognition (SaC) Lab, UC Irvine  
+**Maintainer:** Ali Ekhlasi  
 **Repository:** https://github.com/aliekhlasi/SleepRhythms
 
 ## What the toolbox detects
@@ -389,7 +390,7 @@ The detection methods in this toolbox come from the following papers by the Slee
 
 ## Credits
 
-Developed at the Sleep and Cognition (SaC) Lab.
+Developed at the Sleep and Cognition (SaC) Lab, University of California, Irvine.
 Maintainer: Ali Ekhlasi. Questions and bug reports: please open an issue at https://github.com/aliekhlasi/SleepRhythms/issues
 
 ## License
