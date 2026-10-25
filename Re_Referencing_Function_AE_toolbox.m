@@ -1,95 +1,93 @@
 function [EEG_reref, Channels] = Re_Referencing_Function_AE_toolbox(recording, My_EEG, My_Channel, SamplingRate, leftChannels, rightChannels, midlineChannels, dirPaths)
-    % RE_REFERENCING_FUNCTION_AE_TOOLBOX - Re-reference EEG data based on specified channels.
+    % RE_REFERENCING_FUNCTION_AE_TOOLBOX - Re-reference EEG to the mastoids.
+    %
+    %   Left channels    - M2   (contralateral mastoid)
+    %   Right channels   - M1   (contralateral mastoid)
+    %   Midline channels - (M1 + M2) / 2
+    %
+    % The mastoid channels are found by name ('M1' and 'M2', not case
+    % sensitive), so they do not need to be selected. If they are selected
+    % in one of the groups they are simply ignored.
     %
     % Inputs:
-    %   recording      - Name of the current recording (string).
-    %   My_EEG         - EEG data matrix (channels x samples).
-    %   My_Channel      - Cell array of channel names.
-    %   SamplingRate   - Sampling rate of the EEG data.
-    %   leftChannels   - Cell array of left channel names.
-    %   rightChannels  - Cell array of right channel names.
+    %   recording       - Name of the current recording (string).
+    %   My_EEG          - EEG data matrix (channels x samples) [uV].
+    %   My_Channel      - Cell array of channel names (must include M1 and M2).
+    %   SamplingRate    - Sampling rate of the EEG data [Hz].
+    %   leftChannels    - Cell array of left channel names.
+    %   rightChannels   - Cell array of right channel names.
     %   midlineChannels - Cell array of midline channel names.
-    %   dirPaths       - Cell array of directory paths for saving results.
+    %   dirPaths        - Result folders from createResultDirectories.
     %
     % Outputs:
-    %   EEG_reref      - Structure containing re-referenced EEG data and metadata.
-    %   Channels       - Cell array of remaining channel names after re-referencing.
+    %   EEG_reref - EEGLAB-style structure with the re-referenced data
+    %               (one row per selected scalp channel, in recording order).
+    %   Channels  - Names of the channels in EEG_reref.data, same order.
 
-    % Initialize output structure
-    EEG_reref = struct();
+    My_Channel = cellstr(My_Channel);
 
-    %% Find indices for left channels
-    LeftChannelIndices = findChannelIndices(My_Channel, leftChannels);
-
-    %% Find indices for right channels
-    RightChannelIndices = findChannelIndices(My_Channel, rightChannels);
-
-    %% Find indices for midline channels
-    MidChannelIndices = findChannelIndices(My_Channel, midlineChannels);
-
-    %% Find indices of reference channels M1 and M2
+    %% Find the mastoid channels by name
     M1Index = find(strcmpi(My_Channel, 'M1'));
     M2Index = find(strcmpi(My_Channel, 'M2'));
+    if isempty(M1Index) || isempty(M2Index)
+        error(['Re-referencing needs channels named ''M1'' and ''M2''. ', ...
+               'Channels found: %s'], strjoin(My_Channel, ', '));
+    end
 
-    %% Re-reference EEG data
-    % Subtract M2 channel data from left channels
-    EEG_reref.data(LeftChannelIndices, :) = My_EEG(LeftChannelIndices, :) - ...
-        repmat(My_EEG(M2Index, :), numel(LeftChannelIndices), 1);
+    %% Clean up the channel groups
+    isMastoid = @(c) strcmpi(c, 'M1') | strcmpi(c, 'M2');
+    groups = {cellstr(leftChannels), cellstr(rightChannels), cellstr(midlineChannels)};
+    for g = 1:3
+        groups{g} = groups{g}(~isMastoid(groups{g}));  % Ignore M1/M2 if selected
+    end
+    allSelected = [groups{:}];
+    if isempty(allSelected)
+        error('No scalp channels were selected for re-referencing.');
+    end
+    [uniqueSel, ~, idx] = unique(lower(allSelected));
+    counts = accumarray(idx(:), 1);
+    if any(counts > 1)
+        error('Channel(s) selected in more than one group: %s', strjoin(uniqueSel(counts > 1), ', '));
+    end
 
-    % Subtract M1 channel data from right channels
-    EEG_reref.data(RightChannelIndices, :) = My_EEG(RightChannelIndices, :) - ...
-        repmat(My_EEG(M1Index, :), numel(RightChannelIndices), 1);
+    %% Reference signal for each group
+    refs = { My_EEG(M2Index, :), ...                          % left  -> M2
+             My_EEG(M1Index, :), ...                          % right -> M1
+             (My_EEG(M1Index, :) + My_EEG(M2Index, :)) / 2 }; % midline -> mean of mastoids
 
-    % Compute midline data as the average of M1 and M2
-    midlineData = My_EEG(MidChannelIndices, :) - ...
-        (repmat((My_EEG(M2Index, :) + My_EEG(M1Index, :)), numel(MidChannelIndices), 1) / 2);
-    EEG_reref.data(MidChannelIndices, :) = midlineData;
+    %% Re-reference, keeping the original channel order
+    keep = false(numel(My_Channel), 1);
+    data = zeros(size(My_EEG));
+    for g = 1:3
+        for c = 1:numel(groups{g})
+            k = find(strcmpi(My_Channel, groups{g}{c}), 1);
+            if isempty(k)
+                error('Channel ''%s'' not found in the recording.', groups{g}{c});
+            end
+            data(k, :) = My_EEG(k, :) - refs{g};
+            keep(k) = true;
+        end
+    end
 
-    %% Clean up the data
-    % Remove channels M1 and M2 from channel list and data
-    My_Channel(M2Index) = [];
-    My_Channel(M1Index) = [];
-    EEG_reref.data(M2Index, :) = [];
-    EEG_reref.data(M1Index, :) = [];
+    %% Build the output structure
+    EEG_reref = struct();
+    EEG_reref.data = data(keep, :);
+    EEG_reref.nbchan = sum(keep);
+    EEG_reref.srate = SamplingRate;
+    EEG_reref.trials = 1;
+    EEG_reref.event = [];
+    EEG_reref.pnts = size(My_EEG, 2);
+    Channels = My_Channel(keep);
+    Channels = Channels(:)';
 
-    % Remove rows with all zeros
-    EEG_reref.data(~any(EEG_reref.data, 2), :) = [];
+    fprintf('Re-referenced %d channels: %s\n', numel(Channels), strjoin(Channels, ', '));
 
-    %% Update EEG_reref structure with metadata
-    EEG_reref.nbchan = size(EEG_reref.data, 1);  % Number of channels
-    EEG_reref.srate = SamplingRate;  % Sampling rate
-    EEG_reref.trials = 1;  % Number of trials
-    EEG_reref.event = [];  % Event information
-    EEG_reref.pnts = size(EEG_reref.data, 2);  % Number of points per epoch
-
-    % Assign remaining channel labels
-    Channels = My_Channel;
-
-    %% Save output if the directory path is provided
+    %% Save
     if ~isempty(dirPaths) && ~isempty(dirPaths{1})
-        % Define output filename
         outputFilename = fullfile(dirPaths{1}, [recording '_EEG_reref.mat']);
-        % Save the EEG_reref and Channels variables
         save(outputFilename, 'EEG_reref', 'Channels');
         disp(['Data saved to: ', outputFilename]);
     else
         disp('No directory path provided for saving. Data not saved.');
-    end
-end
-
-function indices = findChannelIndices(My_Channel, channelNames)
-    % FINDCHANNELINDICES - Helper function to find indices of specified channels.
-    %
-    % Inputs:
-    %   My_Channel   - Cell array of channel names.
-    %   channelNames - Cell array of channel names to find.
-    %
-    % Outputs:
-    %   indices      - Array of indices corresponding to the found channels.
-
-    indices = zeros(1, length(channelNames)); % Preallocate indices array
-    for i = 1:length(channelNames)
-        channelName = channelNames{i};  % Get channel name
-        indices(i) = find(strcmpi(My_Channel, channelName));  % Find channel index
     end
 end

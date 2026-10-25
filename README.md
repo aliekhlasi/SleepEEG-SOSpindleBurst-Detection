@@ -23,7 +23,7 @@ The EEG is first re-referenced to the mastoids. Every detected event is saved in
 
 ---
 
-## Quick start (example with simulated data)
+## Quick start (demo with simulated data)
 
 1. Start MATLAB and load EEGLAB:
    ```matlab
@@ -37,21 +37,60 @@ The EEG is first re-referenced to the mastoids. Every detected event is saved in
 3. Answer the pop-up windows:
    - **Select the Toolbox Directory**: the folder that contains `Main_Toolbox.m`.
    - **Select a folder to save the results**: any folder *outside* the toolbox folder.
-   - **Select Left / Right / Midline Channels**: hold ⌘ (Mac) or Ctrl (Windows) to select several. For the example:
+   - **Select LEFT / RIGHT / MIDLINE channels**: hold ⌘ (Mac) or Ctrl (Windows) to select several. For the demo:
 
      | Window | Select |
      |---|---|
-     | Left | `Fp1` and `M1` |
-     | Right | `Fp2` and `M2` |
-     | Midline | `FPz` and `Fz` |
+     | LEFT | `Fp1` |
+     | RIGHT | `Fp2` |
+     | MIDLINE | `FPz` and `Fz` |
 
-     Left channels are referenced to M2, right channels to M1, and midline channels to (M1 + M2) / 2. M1 and M2 are removed afterwards.
+The demo takes about 2–3 minutes. When it finishes, it prints a table comparing what the toolbox found with what was put into the data (see [The demo data](#the-demo-data)).
 
-The example takes about 2 minutes. It uses random noise, so the results are meaningless. The noise is also much larger than real EEG, so almost all spindle candidates are rejected as artifacts (> 200 µV).
+### Channel selection and re-referencing
+
+The data are re-referenced to the mastoids:
+
+| Group | Reference |
+|---|---|
+| Left channels | − M2 (opposite mastoid) |
+| Right channels | − M1 (opposite mastoid) |
+| Midline channels | − (M1 + M2) / 2 |
+
+- The mastoid channels are found **automatically by name** (`M1` and `M2`, any upper/lower case). They aren't shown in the selection windows, and the recording must contain them.
+- Only the channels you select are analyzed and saved. You can leave a group empty, for example a recording with only midline channels.
+- Selecting the same channel in two groups gives a clear error message.
+
+### The demo data
+
+`simulateSleepEEG.m` creates 30 minutes of simulated sleep EEG at 250 Hz, so you can try the toolbox and see that it works:
+
+- **Hypnogram** (60 × 30-s epochs): Wake → N1 → N2 → N3 → N2 → REM → N2 → N3 → N2 → REM. The first quarter of the night contains no REM, as in real sleep.
+- **Background**: 1/f ("pink") noise of about 20 µV on the scalp channels and 8 µV on M1/M2.
+- **Injected events** at random, non-overlapping times on all scalp channels, with a slightly different size on each channel:
+
+  | Event | Stages | Rate | Frequency | Duration | Peak amplitude |
+  |---|---|---|---|---|---|
+  | Slow oscillation | N2 / N3 | 3 / 8 per min | 0.7–1.1 Hz | one cycle | 90–130 µV |
+  | Spindle | N2 / N3 | 5 / 2 per min | 11–15 Hz | 0.6–1.5 s | 25–35 µV |
+  | Theta burst | REM | 4 per min | 5–7 Hz | 1–2.5 s | 30–40 µV |
+  | Alpha burst | REM, Wake | 3 per min | 9–11 Hz | 0.8–1.8 s | 25–35 µV |
+
+At the end of the demo, `checkDemoDetections.m` compares the results with the injected events. Slow oscillations and spindles are compared in N2/N3, bursts in REM. It saves two files in the results folder:
+
+- `<recording>_SimulatedEvents.csv`: every injected event (`Type`, `Stage`, `Start_s`, `End_s`, `Center_s`, `Frequency_Hz`, `Amplitude_uV`).
+- `<recording>_DemoCheck.csv`: per event type and channel, `Injected`, `Found`, `Recall_pct` (found / injected × 100) and `ExtraDetected` (detections that don't match an injected event).
+
+A typical demo run finds about 80–90% of the injected slow oscillations, spindles and bursts. Some misses are expected:
+- Some injected slow oscillations are deliberately close to the 80 µV threshold.
+- The burst detector's threshold adapts to the background.
+- The "extra" detections come from the random background, which by chance sometimes looks like an event.
+
+The results differ slightly from run to run because the data are random. Use `rng(1)` before `Main_Toolbox` for identical runs.
 
 ### Using your own data
 
-In `Main_Toolbox.m`, replace the simulated data with your own:
+In `Main_Toolbox.m`, replace the *Prepare EEG Data* section with your own data, and delete the *Demo only* section at the end:
 
 | Variable | What to provide |
 |---|---|
@@ -59,7 +98,7 @@ In `Main_Toolbox.m`, replace the simulated data with your own:
 | `My_EEG` | EEG matrix, channels × samples, in **µV** |
 | `My_Channel` | Channel names (must include `M1` and `M2`) |
 | `SamplingRate` | Sampling rate in Hz |
-| `Random_Scoring` | Your hypnogram: one stage code per scoring epoch |
+| `Scoring` | Your hypnogram: one stage code per scoring epoch |
 | `Windows_size_scoring` | Scoring epoch length in seconds (usually 30) |
 | `StageCodes` | The number your scoring uses for each stage (see below) |
 
@@ -79,6 +118,8 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 
 ```
 <results folder>/
+├── <recording>_SimulatedEvents.csv      (demo only)
+├── <recording>_DemoCheck.csv            (demo only)
 ├── 1_Rereferenced/
 │   └── <recording>_EEG_reref.mat
 ├── 2_SlowOscillations/
@@ -103,7 +144,7 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `EEG_reref.data` | Re-referenced EEG, channels × samples (µV) |
 | `EEG_reref.srate` | Sampling rate (Hz) |
 | `EEG_reref.nbchan`, `EEG_reref.pnts` | Number of channels and samples |
-| `Channels` | Channel names, in the same order as the rows of `data` (M1/M2 removed) |
+| `Channels` | Names of the selected channels, in the same order as the rows of `data` |
 
 ### 2. Slow oscillations: `2_SlowOscillations/`
 
@@ -129,7 +170,7 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `Channel`, `Stage` | Channel and stage group |
 | `Count` | Number of slow oscillations |
 | `StageDuration_min` | Minutes scored as that stage |
-| `Density_per_min` | `Count / StageDuration_min` |
+| `Density_per_min` | `Count / StageDuration_min` (`NaN` if the stage doesn't occur) |
 | `MeanNegPeak_uV`, `MeanPeakToPeak_uV` | Mean amplitudes |
 
 **`<recording>_SO.mat`** holds `SO_events`, `SO_summary`, `Params` (detection settings), `Channels`, `SamplingRate` and `StageCodes`.
@@ -193,13 +234,33 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `MeanDuration_s`, `MeanPower_uV2` | Averages over those bursts |
 | `NonBurst_MeanPower_uV2` | Mean power of the REM periods between bursts (baseline) |
 
+A period with no REM (for example `Q1` early in the night) has `REM_min = 0`, so its density and averages are `NaN`.
+
 **`<recording>_Bursts.mat`** holds `Burst_events`, `Burst_summary`, `NonBurst_segments` (the periods between bursts, same columns as the burst table), `Params`, `Channels`, `SamplingRate` and `StageCodes`.
+
+---
+
+## Files in this toolbox
+
+| File | Role |
+|---|---|
+| `Main_Toolbox.m` | Main script: run this |
+| `setupToolbox.m` | Adds the function folders to the MATLAB path and checks the requirements |
+| `createResultDirectories.m` | Creates the four result folders |
+| `assignChannels.m` | Pop-up windows for choosing left / right / midline channels |
+| `simulateSleepEEG.m` | Creates the demo data (demo only) |
+| `checkDemoDetections.m` | Compares the demo results with the injected events (demo only) |
+| `Re_Referencing_Function_AE_toolbox.m` | Step 1: re-referencing |
+| `SO_Detection_Function_AE_toolbox.m`, `DetectSO_Filter_AE_toolbox.m` | Step 2: slow oscillations |
+| `Spindle_Detection_Function_AE_toolbox.m`, `Spindle Functions/` | Step 3: spindles |
+| `Burst_Detection_Theta_Alpha_toolbox.m`, `Burst Detection Functions/` | Step 4: theta and alpha bursts |
+| `stageAtSample.m` | Helper: finds the sleep stage at a given time |
 
 ---
 
 ## Methods in brief
 
-**Re-referencing** (`Re_Referencing_Function_AE_toolbox.m`): left channels − M2, right channels − M1, midline channels − (M1 + M2)/2.
+**Re-referencing** (`Re_Referencing_Function_AE_toolbox.m`): left channels − M2, right channels − M1, midline channels − (M1 + M2)/2. M1 and M2 are found by name.
 
 **Slow oscillations** (`SO_Detection_Function_AE_toolbox.m`, `DetectSO_Filter_AE_toolbox.m`): the signal is band-passed at 0.1–4 Hz (4th-order Butterworth, zero-phase). Zero-crossings split it into candidate waves. A wave is kept if:
 - its negative half-wave lasts 0.3–1 s,

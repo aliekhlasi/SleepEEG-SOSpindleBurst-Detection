@@ -1,67 +1,35 @@
 function [leftChannels, rightChannels, midlineChannels] = assignChannels(My_Channel)
-    % ASSIGNCHANNELS - Assign channels based on user selection from a cell array.
+    % ASSIGNCHANNELS - Ask the user which scalp channels are left, right and midline.
+    %
+    % The mastoid reference channels (M1, M2) are not shown: they are found
+    % automatically by the re-referencing step.
+    %
     % Outputs:
-    %   leftChannels - Selected left channels.
-    %   rightChannels - Selected right channels.
-    %   midlineChannels - Selected midline channels.
+    %   leftChannels    - Selected left channels (referenced to M2).
+    %   rightChannels   - Selected right channels (referenced to M1).
+    %   midlineChannels - Selected midline channels (referenced to (M1+M2)/2).
 
-    % Example cell array with 24 elements
-    allChannels = My_Channel;
+    allChannels = cellstr(My_Channel);
+    scalp = allChannels(~(strcmpi(allChannels, 'M1') | strcmpi(allChannels, 'M2')));
 
-    % Ask the user to select left channels
-    leftSelection = listdlg('PromptString', 'Select Left Channels:', ...
-                             'SelectionMode', 'multiple', ...
-                             'ListString', allChannels);
-    
-    % Check if the user made a selection for left channels
-    if isempty(leftSelection)
-        disp('No left channels selected. Exiting.');
-        leftChannels = {};
-        rightChannels = {};
-        midlineChannels = {};
-        return; % Exit the function
+    leftChannels    = pick(scalp, 'Select LEFT channels (referenced to M2):');
+    rightChannels   = pick(scalp, 'Select RIGHT channels (referenced to M1):');
+    midlineChannels = pick(scalp, 'Select MIDLINE channels (referenced to (M1+M2)/2):');
+
+    if isempty([leftChannels, rightChannels, midlineChannels])
+        error('No channels selected.');
     end
 
-    % Assign selected left channels
-    leftChannels = allChannels(leftSelection);
-    
-    % Ask the user to select right channels
-    rightSelection = listdlg('PromptString', 'Select Right Channels:', ...
-                              'SelectionMode', 'multiple', ...
-                              'ListString', allChannels);
-    
-    % Check if the user made a selection for right channels
-    if isempty(rightSelection)
-        disp('No right channels selected. Exiting.');
-        rightChannels = {};
-        midlineChannels = {};
-        return; % Exit the function
-    end
+    disp('Selected channels:');
+    fprintf('  Left:    %s\n', strjoin(leftChannels, ', '));
+    fprintf('  Right:   %s\n', strjoin(rightChannels, ', '));
+    fprintf('  Midline: %s\n', strjoin(midlineChannels, ', '));
+end
 
-    % Assign selected right channels
-    rightChannels = allChannels(rightSelection);
-    
-    % Ask the user to select midline channels
-    midlineSelection = listdlg('PromptString', 'Select Midline Channels:', ...
-                                'SelectionMode', 'multiple', ...
-                                'ListString', allChannels);
-    
-    % Check if the user made a selection for midline channels
-    if isempty(midlineSelection)
-        disp('No midline channels selected. Exiting.');
-        midlineChannels = {};
-        return; % Exit the function
-    end
-
-    % Assign selected midline channels
-    midlineChannels = allChannels(midlineSelection);
-
-    % Display selected channels
-    disp('Final Selected Channels:');
-    disp('Left Channels:');
-    disp(leftChannels);
-    disp('Right Channels:');
-    disp(rightChannels);
-    disp('Midline Channels:');
-    disp(midlineChannels);
+function chosen = pick(list, prompt)
+    % One selection window. An empty selection (or Cancel) gives an empty group.
+    sel = listdlg('PromptString', prompt, 'SelectionMode', 'multiple', ...
+                  'ListString', list, 'ListSize', [320 300]);
+    chosen = list(sel);
+    chosen = chosen(:)';
 end
