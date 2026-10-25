@@ -305,6 +305,38 @@ A period with no REM (for example `Q1` early in the night) has `REM_min = 0`, so
 
 ---
 
+## Filtering
+
+Each detector filters the re-referenced EEG separately, for its own frequency range. The re-referenced data saved in `1_Rereferenced/` are **not filtered**. All filters are **zero-phase**: they run forwards and backwards (`filtfilt`, or EEGLAB's non-causal FIR), so events aren't shifted in time.
+
+```
+                       ┌─ 0.1–4 Hz (Butterworth) ─────────────────────────────► slow oscillations
+                       │
+re-referenced EEG ─────┼─ 0.3–35 Hz (EEGLAB FIR) ─┬─ 9–16 Hz (Butterworth) ──► spindle candidates (RMS)
+                       │                          ├─ > 3 Hz (Butterworth) ────► wavelet check
+                       │                          └─ (as is) ─────────────────► waveform check, amplitude
+                       │
+                       ├─ 4–8 Hz  (EEGLAB FIR) ──► Hilbert envelope ──────────► theta bursts
+                       └─ 8–13 Hz (EEGLAB FIR) ──► Hilbert envelope ──────────► alpha bursts
+```
+
+| Step | Filter | Settings | Used for | Code |
+|---|---|---|---|---|
+| Slow oscillations | Band-pass **0.1–4 Hz** | Butterworth: 4th-order low-pass at 4 Hz, then 4th-order high-pass at 0.1 Hz, zero-phase (`filtfilt`) | Finding zero crossings, durations and amplitudes (`NegPeak_uV`, `PosPeak_uV`, `PeakToPeak_uV`) | `DetectSO_Filter_AE_toolbox.m` |
+| Spindles: pre-filter | Band-pass **0.3–35 Hz** | EEGLAB `pop_eegfiltnew` (windowed-sinc FIR, Hamming window). At 250 Hz: 2751 points, 0.3 Hz transition band, −6 dB at 0.15 and 35.15 Hz | Removes slow drifts and high-frequency noise (including 50/60 Hz line noise). This signal is used for the waveform check, the < 200 µV artifact limit and `PeakToPeak_uV` | `Spindle_Detection_Function_AE_toolbox.m` |
+| Spindles: sigma band | Band-pass **9–16 Hz** | Butterworth: 6th-order high-pass at 9 Hz, then 6th-order low-pass at 16 Hz, zero-phase, applied to the 0.3–35 Hz signal | Moving RMS → spindle candidates (step 1) | `Spindle_Detection_Function_AE_toolbox.m` |
+| Spindles: wavelet | High-pass **3 Hz** | Butterworth, 6th order, zero-phase, applied to the 0.3–35 Hz signal | Removes slow waves before the Morlet wavelet transform (step 2), so they don't hide the spindle | `GetSpindlesFromRMSpeaks.m` |
+| Theta bursts | Band-pass **4–8 Hz** | EEGLAB `pop_eegfiltnew` (windowed-sinc FIR, Hamming window). At 250 Hz: 415 points, ~2 Hz transition band, −6 dB at ~3 and ~9 Hz | Hilbert amplitude envelope and phase → bursts; `MeanPower_uV2` | `A_burst_detector_wrapper.m` |
+| Alpha bursts | Band-pass **8–13 Hz** | Same as theta. At 250 Hz: 415 points, ~2 Hz transition band, −6 dB at ~7 and ~14 Hz | Same as theta | `A_burst_detector_wrapper.m` |
+
+**Notes:**
+- **Filter length depends on the sampling rate.** The EEGLAB FIR lengths above are for 250 Hz; EEGLAB adjusts them automatically for other rates and prints the settings in the Command Window.
+- **Edges between bands overlap slightly.** With a ~2 Hz transition band, the theta filter passes some activity at 3–4 and 8–9 Hz, and the alpha filter at 7–8 and 13–14 Hz. An oscillation near 8 Hz can therefore appear in both bands.
+- **Times vs. amplitudes.** The timing of slow oscillations comes from the 0.1–4 Hz signal, except `NegPeak_s`, which is the lowest point of the unfiltered signal within the negative half-wave.
+- **No other preprocessing.** The toolbox doesn't remove artifacts, bad channels or line noise beyond these filters. For real data, clean the EEG first, for example in EEGLAB, and mark artifact epochs in your scoring.
+
+---
+
 ## Methods in brief
 
 **Re-referencing** (`Re_Referencing_Function_AE_toolbox.m`): left channels − M2, right channels − M1, midline channels − (M1 + M2)/2. M1 and M2 are found by name.
