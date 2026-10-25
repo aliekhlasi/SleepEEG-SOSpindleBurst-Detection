@@ -7,15 +7,51 @@ A MATLAB toolbox that detects three kinds of sleep EEG events: slow oscillations
 
 ## What the toolbox detects
 
-| Event | Frequency range | Other criteria | Searched in | Summarized for |
+| Event | Frequency range | Other criteria | Detected in | Counted in the summary table for |
 |---|---|---|---|---|
 | **Slow oscillation (SO)** | Band-pass 0.1–4 Hz. Negative half-wave 0.3–1 s, i.e. waves of about 0.5–1.7 Hz | Negative peak < −80 µV, peak-to-peak > 80 µV | Whole recording | **N2, N3, N2+N3** |
 | **Sleep spindle** | Sigma band **9–16 Hz** | RMS peak z > 3.5, a wavelet power island centered at 9–16 Hz, clear oscillation peaks, < 200 µV | Whole recording | **N2, N3, N2+N3** |
 | **Theta burst** | **4–8 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–3 s | Whole recording | **REM** (night quarters, halves, whole night) |
 | **Alpha burst** | **8–13 Hz** | Envelope > mean + 2 SD (30-s window), duration 0.5–2 s | Whole recording | **REM** (night quarters, halves, whole night) |
 
-- **Searched in:** every event is detected in the whole recording, and the event tables list all of them with the sleep stage at which each occurred. You can therefore also look at, for example, spindles in N1, or bursts in Wake.
-- **Summarized for:** the summary tables (counts, densities per minute, averages) only use these stages.
+### Detected in vs. counted in the summary table
+
+These are two separate steps:
+
+- **Detected in:** the toolbox scans the **whole recording**, every epoch and every sleep stage. Each event it finds is written to the **events table** (`…_events.csv`), labeled with the sleep stage in which it occurred.
+- **Counted in the summary table for:** the **summary table** (`…_summary.csv`) only counts events from the listed stages. Events from other stages stay in the events table, but don't appear in the summary.
+
+**Example:** suppose the toolbox finds 100 spindles on channel Fz:
+
+| Stage | Spindles found |
+|---|---|
+| N2 | 60 |
+| N3 | 17 |
+| REM | 15 |
+| Wake / N1 | 8 |
+
+- `Spindle_events.csv` lists **all 100** spindles, one row each, with a `Stage` column.
+- `Spindle_summary.csv` has three rows for Fz: **N2 = 60**, **N3 = 17** and **N2+N3 = 77**. The 23 spindles in REM, Wake and N1 aren't counted there.
+
+To analyze other stages (for example, spindles in N1), filter the events table by its `Stage` column. You don't need to rerun the toolbox.
+
+### What "density" means
+
+**Density = number of events per minute of that sleep stage.** It's always computed within the stage (and part of the night) of that row, never per minute of the whole recording:
+
+```
+Density_per_min = number of events in that stage ÷ minutes scored as that stage
+```
+
+| Summary row | Count | Divided by | Example |
+|---|---|---|---|
+| Spindles, `N2` | spindles in N2 | minutes of N2 | 60 spindles ÷ 12 min of N2 = **5.0 per min of N2** |
+| Spindles, `N3` | spindles in N3 | minutes of N3 | 17 ÷ 8 min of N3 = **2.1 per min of N3** |
+| Spindles, `N2+N3` | spindles in N2 **plus** N3 | minutes of N2 **plus** N3 | 77 ÷ 20 min = **3.85 per min of N2+N3** |
+| Theta bursts, `Q3` | REM theta bursts in the 3rd quarter of the night | minutes of REM in the 3rd quarter | 25 ÷ 3 min of REM = **8.3 per min of REM** |
+| Theta bursts, `WholeNight` | all REM theta bursts | all minutes of REM | 62 ÷ 8 min of REM = **7.75 per min of REM** |
+
+The `N2+N3` density is **not** the average of the N2 and N3 densities: it's the combined count divided by the combined time. The minutes used are listed next to every density, in `StageDuration_min` (slow oscillations, spindles) or `REM_min` (bursts). If a stage doesn't occur in that period, its minutes are 0 and the density is `NaN`.
 
 The EEG is first re-referenced to the mastoids. Every detected event is saved in a table (CSV and `.mat`) with its channel, sleep stage, timing and amplitude. A summary table gives counts and densities per channel.
 
@@ -181,7 +217,7 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `Channel`, `Stage` | Channel and stage group |
 | `Count` | Number of slow oscillations |
 | `StageDuration_min` | Minutes scored as that stage |
-| `Density_per_min` | `Count / StageDuration_min` (`NaN` if the stage doesn't occur) |
+| `Density_per_min` | Events per minute **of that stage**: `Count / StageDuration_min` (`NaN` if the stage doesn't occur). See [What "density" means](#what-density-means) |
 | `MeanNegPeak_uV`, `MeanPeakToPeak_uV` | Mean amplitudes |
 
 **`<recording>_SO.mat`** holds `SO_events`, `SO_summary`, `Params` (detection settings), `Channels`, `SamplingRate` and `StageCodes`.
@@ -210,7 +246,7 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `Channel`, `Stage` | Channel and stage group |
 | `Count` | Number of spindles |
 | `StageDuration_min` | Minutes scored as that stage |
-| `Density_per_min` | `Count / StageDuration_min` |
+| `Density_per_min` | Spindles per minute **of that stage**: `Count / StageDuration_min`. See [What "density" means](#what-density-means) |
 | `MeanFrequency_Hz`, `MeanDuration_s`, `MeanPeakToPeak_uV` | Averages over those spindles |
 
 **`<recording>_Spindles.mat`** holds `Spindle_events`, `Spindle_summary`, `Spindle_waveforms` (one cell per channel with the 2-s EEG window `tx`/`trace` and `Onset_s`/`Offset_s` of each spindle), `Params`, `Channels`, `SamplingRate` and `StageCodes`.
@@ -241,7 +277,7 @@ All times are in **seconds from the start of the recording**. All amplitudes are
 | `Period` | `Q1`–`Q4` (night quarters), `FirstHalf`, `SecondHalf` or `WholeNight` |
 | `REM_min` | Minutes of REM in that period |
 | `Count` | Number of included bursts |
-| `Density_per_min` | `Count / REM_min` |
+| `Density_per_min` | Bursts per minute **of REM in that period**: `Count / REM_min`. See [What "density" means](#what-density-means) |
 | `MeanDuration_s`, `MeanPower_uV2` | Averages over those bursts |
 | `NonBurst_MeanPower_uV2` | Mean power of the REM periods between bursts (baseline) |
 
