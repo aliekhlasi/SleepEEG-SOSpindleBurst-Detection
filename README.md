@@ -341,17 +341,49 @@ re-referenced EEG ─────┼─ 0.3–35 Hz (EEGLAB FIR) ─┬─ 9–1
 
 **Re-referencing** (`Re_Referencing_Function_AE_toolbox.m`): left channels − M2, right channels − M1, midline channels − (M1 + M2)/2. M1 and M2 are found by name.
 
-**Slow oscillations** (`SO_Detection_Function_AE_toolbox.m`, `DetectSO_Filter_AE_toolbox.m`): the signal is band-passed at 0.1–4 Hz (4th-order Butterworth, zero-phase). Zero-crossings split it into candidate waves. A wave is kept if:
+**Slow oscillations** (`SO_Detection_Function_AE_toolbox.m`, `DetectSO_Filter_AE_toolbox.m`), following Malerba et al. (2019, 2022): the signal is band-passed at 0.1–4 Hz (4th-order Butterworth, zero-phase). Zero-crossings split it into candidate waves. A wave is kept if:
 - its negative half-wave lasts 0.3–1 s,
 - the negative peak is deeper than −80 µV,
 - and the peak-to-peak amplitude is above 80 µV.
 
-**Spindles** (`Spindle_Detection_Function_AE_toolbox.m` and `Spindle Functions/`) run in three steps:
+**Spindles** (`Spindle_Detection_Function_AE_toolbox.m` and `Spindle Functions/`), following Malerba et al. (2022), run in three steps:
 1. *Candidates*: the RMS of the 9–16 Hz signal (0.1-s window) is z-scored. Peaks above z = 3.5 become candidates (`DetectRMSpeaks.m`).
 2. *Wavelet check*: a Morlet wavelet transform of ±1 s around each candidate must contain a closed power "island" centered within 9–16 Hz and within 0.5 s of the candidate (`GetSpindlesFromRMSpeaks.m`).
 3. *Waveform check*: the spindle must show clear oscillation peaks and stay below 200 µV. Onset and offset are refined to the first and last peak (`SpdlFrequencyInTime.m`).
 
-**Bursts** (`Burst_Detection_Theta_Alpha_toolbox.m` and `Burst Detection Functions/`): the signal is band-passed (EEGLAB) and its Hilbert amplitude envelope is computed. A burst is a period where the envelope exceeds mean + 2 SD of a 30-s moving window. The burst edges are extended while the amplitude stays above half the threshold, and a minimum number of cycles is required (`burst_detector2.m`).
+**Bursts** (`Burst_Detection_Theta_Alpha_toolbox.m` and `Burst Detection Functions/`), following Shuster et al. (2024): the signal is band-passed (EEGLAB) and its Hilbert amplitude envelope is computed. A burst is a period where the envelope exceeds mean + 2 SD of a 30-s moving window. The burst edges are extended while the amplitude stays above half the threshold, and a minimum number of cycles is required (`burst_detector2.m`).
+
+---
+
+## References
+
+The detection methods in this toolbox come from the following papers by the Sleep and Cognition (SaC) Lab. If you use the toolbox, please cite the paper(s) for the detector(s) you used, as well as this repository.
+
+### Methods implemented in this toolbox
+
+| Detector | Paper |
+|---|---|
+| Slow oscillations | Malerba P, Whitehurst LN, Simons SB, Mednick SC (2019). Spatio-temporal structure of sleep slow oscillations on the electrode manifold and its relation to spindles. *Sleep*, 42(1), zsy197. [doi:10.1093/sleep/zsy197](https://doi.org/10.1093/sleep/zsy197) |
+| Spindles (and slow oscillations) | Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of sleep spindles and their coordination with slow oscillations on the electrode manifold. *Sleep*, 45(8), zsac132. [doi:10.1093/sleep/zsac132](https://doi.org/10.1093/sleep/zsac132) |
+| Theta and alpha bursts | Shuster AE, Chen PC, Niknazar H, McDevitt EA, Lopour B, Mednick SC (2024). Novel electrophysiological signatures of learning and forgetting in human rapid eye movement sleep. *Journal of Neuroscience*, 44(24). [doi:10.1523/JNEUROSCI.1517-23.2024](https://doi.org/10.1523/JNEUROSCI.1517-23.2024) |
+
+**What matches each paper:**
+- **Slow oscillations:** 0.1–4 Hz band-pass, negative peak below −80 µV, peak-to-peak above 80 µV, 0.3–1 s between the first two zero crossings, and at most 10 s overall. These are the same as Malerba et al. (2019, 2022).
+- **Spindles:** 9–16 Hz band-pass, RMS over 100 ms, z-scored in 30-s epochs, candidates at z ≥ 3.5 (prominence ≥ 0.5), a 2-s Morlet wavelet with 20 power level curves, and onset/offset from the half-height loop. These are the same as Malerba et al. (2022).
+- **Bursts:** REM sleep, theta 4–8 Hz and alpha 8–13 Hz (Hamming-windowed sinc FIR), Hilbert envelope, 2 SD threshold in a 30-s sliding window, merging of overlapping bursts, and durations 0.5–3 s (theta) and 0.5–2 s (alpha). These are the same as Shuster et al. (2024).
+
+**Differences from Shuster et al. (2024):**
+- **Minimum cycles:** the paper uses 2 cycles. This toolbox uses `ceil(mean(band)/3)`, which is 2 for theta but 4 for alpha (set in `A_burst_detector_wrapper.m`).
+- **Night split:** the paper compares halves of the night. This toolbox reports halves and also quarters (`Q1`–`Q4`).
+
+### Related work
+
+- Shuster AE, Morehouse A, McDevitt EA, Chen PC, Whitehurst LN, Zhang J, Sattari N, Uzoigwe T, **Ekhlasi A**, Cai D, Simon K, Niethard N, Mednick SC (2025). REM refines and rescues memory representations: a new theory. *Sleep Advances*, 6(1), zpaf004. [doi:10.1093/sleepadvances/zpaf004](https://doi.org/10.1093/sleepadvances/zpaf004). This review covers the role of REM theta and alpha bursts in memory.
+- Shuster AE, McDevitt EA, Mednick SC (2026). Strong and weak episodic memories are shaped by multiple cycles of NREM spindles and REM alpha bursts. *Journal of Sleep Research*, e70362. [doi:10.1111/jsr.70362](https://doi.org/10.1111/jsr.70362). An application of the spindle and alpha-burst measures.
+
+### How to cite this toolbox
+
+> Ekhlasi A. SleepEEG-SOSpindleBurst-Detection: a MATLAB toolbox for detecting slow oscillations, sleep spindles and theta/alpha bursts in sleep EEG. Sleep and Cognition (SaC) Lab. https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
 
 ---
 

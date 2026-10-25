@@ -19,6 +19,9 @@ function [FoundPeaks] = DetectRMSpeaks(filtchannel, tx, freq, opt)
     %                 - Time: time points of detected peaks.
     %                 - tID: indices of detected peaks.
     %
+    %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
+    %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

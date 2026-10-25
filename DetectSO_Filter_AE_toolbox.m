@@ -38,6 +38,9 @@
 %
 %           written by Mohsen, modified by Daga, Dec 2016
 %
+%           Reference: Malerba P, Whitehurst LN, Simons SB, Mednick SC (2019). Sleep 42(1):zsy197.
+%                      doi:10.1093/sleep/zsy197 (same criteria in Malerba et al. 2022, Sleep 45(8):zsac132)
+%
 %           Part of SleepEEG-SOSpindleBurst-Detection
 %           Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
 %           https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

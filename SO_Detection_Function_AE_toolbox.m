@@ -23,6 +23,9 @@ function SO_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, Scorin
     %   <recording>_SO_summary.csv - Count and density per channel for N2, N3 and N2+N3.
     %   <recording>_SO.mat         - Both tables plus the detection parameters.
     %
+    %   Reference: Malerba P, Whitehurst LN, Simons SB, Mednick SC (2019). Sleep 42(1):zsy197.
+    %              doi:10.1093/sleep/zsy197 (same criteria in Malerba et al. 2022, Sleep 45(8):zsac132)
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

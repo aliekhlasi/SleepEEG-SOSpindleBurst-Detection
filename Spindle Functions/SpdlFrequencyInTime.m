@@ -21,6 +21,9 @@ function [IPIs, SPon, SPoff, keepIT] = SpdlFrequencyInTime(tx_sp, ch_sp, SPstart
     %   SPoff     - Adjusted offset time of the spindle event [seconds].
     %   keepIT    - Flag indicating whether the spindle is valid (1) or not (0).
     %
+    %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
+    %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

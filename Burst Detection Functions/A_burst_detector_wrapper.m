@@ -12,6 +12,9 @@ function Detected = A_burst_detector_wrapper(EEG_Burst, freq_band)
     %                           periods between bursts.
     %       filtered          - Band-pass filtered signal of the channel.
     %
+    %   Reference: Shuster AE, Chen PC, Niknazar H, McDevitt EA, Lopour B, Mednick SC (2024).
+    %              J Neurosci 44(24). doi:10.1523/JNEUROSCI.1517-23.2024
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

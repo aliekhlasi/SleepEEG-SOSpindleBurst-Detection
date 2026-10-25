@@ -25,6 +25,9 @@ function Spindle_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, S
     %   <recording>_Spindles.mat        - Both tables, spindle waveforms and parameters.
     %   Figures/<channel>/*.png         - Wavelet map of every candidate spindle.
     %
+    %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
+    %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

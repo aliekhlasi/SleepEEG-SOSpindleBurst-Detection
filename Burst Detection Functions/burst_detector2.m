@@ -35,6 +35,9 @@ function [starts, ends, nb_starts, nb_ends] = burst_detector2(filtered_Signal, F
     %   min_cycles_tostart = 0, ignore_cycle = floor(mean(band)/3),
     %   min_cycles = ceil(mean(band)/3), power_damp_ratio_befor_after = 0.5.
     %
+    %   Reference: Shuster AE, Chen PC, Niknazar H, McDevitt EA, Lopour B, Mednick SC (2024).
+    %              J Neurosci 44(24). doi:10.1523/JNEUROSCI.1517-23.2024
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection

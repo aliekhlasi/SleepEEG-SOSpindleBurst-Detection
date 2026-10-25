@@ -25,6 +25,9 @@ function Spdl = GetSpindlesFromRMSpeaks(FoundPeaks, channel, tx, freq, Hypno, op
     %          RMStime (candidate time), tx/trace (2-s EEG window), on/off [s],
     %          freq [Hz], pktime (time of max power) [s], pwLevel (0-1), n (count).
     %
+    %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
+    %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
+    %
     %   Part of SleepEEG-SOSpindleBurst-Detection
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
     %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
