@@ -29,9 +29,9 @@ function Burst_Detection_Theta_Alpha_toolbox(recording, EEG_reref, Channels, Sco
     %   Reference: Shuster AE, Chen PC, Niknazar H, McDevitt EA, Lopour B, Mednick SC (2024).
     %              J Neurosci 44(24). doi:10.1523/JNEUROSCI.1517-23.2024
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     fs = SamplingRate;
     epochLen = Windows_size_scoring * fs;      % Epoch length [samples]

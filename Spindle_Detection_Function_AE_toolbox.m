@@ -28,9 +28,9 @@ function Spindle_Detection_Function_AE_toolbox(recording, EEG_reref, Channels, S
     %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
     %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     fs = SamplingRate;
     epochMin = Windows_size_scoring / 60;  % Epoch length in minutes

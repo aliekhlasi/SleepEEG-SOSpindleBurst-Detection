@@ -24,9 +24,9 @@ function [IPIs, SPon, SPoff, keepIT] = SpdlFrequencyInTime(tx_sp, ch_sp, SPstart
     %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
     %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     % Extract time and channel data within the spindle event window
     tx = tx_sp(and(tx_sp >= SPstart, tx_sp <= SPend));  % Time vector within the spindle window

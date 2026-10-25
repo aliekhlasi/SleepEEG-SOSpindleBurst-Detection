@@ -22,9 +22,9 @@ function [FoundPeaks] = DetectRMSpeaks(filtchannel, tx, freq, opt)
     %   Reference: Malerba P, Whitehurst L, Mednick SC (2022). The space-time profiles of
     %              sleep spindles... Sleep 45(8):zsac132. doi:10.1093/sleep/zsac132
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     %% Initialize Parameters
     PkThreshold = 3.5;  % Minimum z-score height for peaks of RMS

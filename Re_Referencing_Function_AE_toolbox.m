@@ -24,9 +24,9 @@ function [EEG_reref, Channels] = Re_Referencing_Function_AE_toolbox(recording, M
     %               (one row per selected scalp channel, in recording order).
     %   Channels  - Names of the channels in EEG_reref.data, same order.
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     My_Channel = cellstr(My_Channel);
 

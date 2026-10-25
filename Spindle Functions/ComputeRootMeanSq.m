@@ -16,9 +16,9 @@ function [rms_signal] = ComputeRootMeanSq(signal, wdwT, sampling_freq, smoothing
     %                       (0 within half a window of the edges).
     %   rms_signal.smooth - Gaussian-smoothed RMS (empty if smoothingWdw = 0).
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     %% Moving RMS over a centered window
     rms = zeros(size(signal));

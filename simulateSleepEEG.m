@@ -23,9 +23,9 @@ function [My_EEG, Scoring, Truth] = simulateSleepEEG(My_Channel, SamplingRate, W
     %   Truth   - Table with one row per injected event (the "ground truth"
     %             that checkDemoDetections compares the results with).
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     fs = SamplingRate;
     epochLen = Windows_size_scoring * fs;

@@ -18,9 +18,9 @@ function DemoCheck = checkDemoDetections(recording, Truth, selectedFolder)
     %
     % Output: DemoCheck table, also saved as <recording>_DemoCheck.csv in the results folder.
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     SO = readtable(fullfile(selectedFolder, '2_SlowOscillations', [recording '_SO_events.csv']), 'TextType', 'string');
     SP = readtable(fullfile(selectedFolder, '3_Spindles', [recording '_Spindle_events.csv']), 'TextType', 'string');

@@ -15,9 +15,9 @@ function Detected = A_burst_detector_wrapper(EEG_Burst, freq_band)
     %   Reference: Shuster AE, Chen PC, Niknazar H, McDevitt EA, Lopour B, Mednick SC (2024).
     %              J Neurosci 44(24). doi:10.1523/JNEUROSCI.1517-23.2024
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     % Band-pass filter all channels (EEGLAB)
     EEG = pop_eegfiltnew(EEG_Burst, 'locutoff', freq_band(1), 'hicutoff', freq_band(2), 'plotfreqz', 0);

@@ -41,9 +41,9 @@
 %           Reference: Malerba P, Whitehurst LN, Simons SB, Mednick SC (2019). Sleep 42(1):zsy197.
 %                      doi:10.1093/sleep/zsy197 (same criteria in Malerba et al. 2022, Sleep 45(8):zsac132)
 %
-%           Part of SleepEEG-SOSpindleBurst-Detection
+%           Part of SleepRhythms
 %           Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-%           https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+%           https://github.com/aliekhlasi/SleepRhythms
 % %----------------------------------------------------------------------%
 
 function [can_events, events_minima, EEG_Filtered_Signal] = DetectSO_Filter_AE_toolbox(signal_raw, freq, threshold_neg, peak_to_peak, duration_min, duration_max, duration_whole)

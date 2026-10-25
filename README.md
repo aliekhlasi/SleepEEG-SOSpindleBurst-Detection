@@ -1,9 +1,9 @@
-# SleepEEG-SOSpindleBurst-Detection
+# SleepRhythms
 
-A MATLAB toolbox that detects three kinds of sleep EEG events: slow oscillations, sleep spindles, and theta/alpha bursts.
+**SleepRhythms** is a MATLAB toolbox that detects three kinds of sleep EEG rhythms: slow oscillations, sleep spindles, and theta/alpha bursts in REM sleep.
 
 **Maintainer:** Ali Ekhlasi, Sleep and Cognition (SaC) Lab  
-**Repository:** https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+**Repository:** https://github.com/aliekhlasi/SleepRhythms
 
 ## What the toolbox detects
 
@@ -78,7 +78,7 @@ The EEG is first re-referenced to the mastoids. Every detected event is saved in
    ```
 2. Go to the toolbox folder and run the main script:
    ```matlab
-   cd('/path/to/SleepEEG-SOSpindleBurst-Detection')
+   cd('/path/to/SleepRhythms')
    Main_Toolbox
    ```
 3. Answer the pop-up windows:
@@ -383,14 +383,14 @@ The detection methods in this toolbox come from the following papers by the Slee
 
 ### How to cite this toolbox
 
-> Ekhlasi A. SleepEEG-SOSpindleBurst-Detection: a MATLAB toolbox for detecting slow oscillations, sleep spindles and theta/alpha bursts in sleep EEG. Sleep and Cognition (SaC) Lab. https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+> Ekhlasi A. SleepRhythms: a MATLAB toolbox for detecting slow oscillations, sleep spindles and theta/alpha bursts in sleep EEG. Sleep and Cognition (SaC) Lab. https://github.com/aliekhlasi/SleepRhythms
 
 ---
 
 ## Credits
 
 Developed at the Sleep and Cognition (SaC) Lab.
-Maintainer: Ali Ekhlasi. Questions and bug reports: please open an issue at https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection/issues
+Maintainer: Ali Ekhlasi. Questions and bug reports: please open an issue at https://github.com/aliekhlasi/SleepRhythms/issues
 
 ## License
 

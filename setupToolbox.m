@@ -4,9 +4,9 @@ function setupToolbox()
     % Main_Toolbox.m) and adds its 'Spindle Functions' and
     % 'Burst Detection Functions' subfolders to the path.
     %
-    %   Part of SleepEEG-SOSpindleBurst-Detection
+    %   Part of SleepRhythms
     %   Maintainer: Ali Ekhlasi, Sleep and Cognition (SaC) Lab
-    %   https://github.com/aliekhlasi/SleepEEG-SOSpindleBurst-Detection
+    %   https://github.com/aliekhlasi/SleepRhythms
 
     % Prompt user to select the toolbox directory
     toolboxDir = uigetdir('', 'Select the Toolbox Directory');
